@@ -23,6 +23,7 @@ class LinkedRotateLineStage {
         this.canvas.width = w
         this.canvas.height = h
         this.context = this.canvas.getContext('2d')
+        document.body.appendChild(this.canvas)
     }
 
     render() {
@@ -143,13 +144,13 @@ class RLNode {
     }
 
     draw(context : CanvasRenderingContext2D) {
-        const gap : number = w / NODES
+        const gap : number = (w * 0.8) / (NODES + 1)
         context.save()
-        context.translate(this.i * gap + gap / 2, h / 2)
-        context.rotate(180 * this.state.scale)
+        context.translate(0.1 * w + this.i * gap + gap, h / 2)
+        context.rotate(Math.PI * this.state.scale)
         context.beginPath()
         context.moveTo(0, 0)
-        context.lineTo(-gap/2, 0)
+        context.lineTo(-gap, 0)
         context.stroke()
         context.restore()
     }
