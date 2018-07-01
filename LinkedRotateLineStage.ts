@@ -58,3 +58,27 @@ class RLState {
         }
     }
 }
+
+class RLAnimator {
+
+    animated : boolean = false
+
+    interval : number
+
+    start(cb : Function) {
+        if (!this.animated) {
+            this.animated = true
+            this.interval = setInterval(() => {
+                safeExecute(cb)
+            }, 60)
+        }
+    }
+
+    stop(cb : Function) {
+        if (this.animated) {
+            this.animated = false
+            clearInterval(this.interval)
+            safeExecute(cb)
+        }
+    }
+}
