@@ -11,6 +11,10 @@ class LinkedRotateLineStage {
 
     context : CanvasRenderingContext2D
 
+    linkedRotateLine : LinkedRotateLine = new LinkedRotateLine()
+
+    animator : RLAnimator = new RLAnimator()
+
     constructor() {
         this.initCanvas()
     }
@@ -24,11 +28,21 @@ class LinkedRotateLineStage {
     render() {
         this.context.fillStyle = '#212121'
         this.context.fillRect(0, 0, w, h)
+        this.linkedRotateLine.draw(this.context)
     }
 
     handleTap() {
         this.canvas.onmousedown = () => {
-
+            this.linkedRotateLine.startUpdating(() => {
+                this.animator.start (() => {
+                    this.render()
+                    this.linkedRotateLine.update(() => {
+                        this.animator.stop(() => {
+                            this.render()
+                        })
+                    })
+                })
+            })
         }
     }
 }
@@ -122,7 +136,7 @@ class RLNode {
         return this
     }
 
-    draw(context) {
+    draw(context : CanvasRenderingContext2D) {
         const gap : number = w / NODES
         context.save()
         context.translate(this.i * gap + gap / 2, h / 2)
@@ -132,5 +146,32 @@ class RLNode {
         context.lineTo(-gap/2, 0)
         context.stroke()
         context.restore()
+    }
+}
+
+class LinkedRotateLine {
+
+    curr : RLNode = new RLNode(0)
+
+    dir : number = 1
+
+    draw(context : CanvasRenderingContext2D) {
+        context.lineCap = 'round'
+        context.lineWidth = Math.min(w, h) / 60
+        context.strokeStyle = '#e74c3c'
+        this.curr.draw(context)
+    }
+
+    update(cb : Function) {
+        this.curr.update(() => {
+            this.curr = this.curr.getNext(this.dir, () => {
+                this.dir *= -1
+            })
+            safeExecute(cb)
+        })
+    }
+
+    startUpdating(cb : Function) {
+        this.curr.startUpdating(cb)
     }
 }
