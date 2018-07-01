@@ -91,16 +91,16 @@ class RLNode {
 
     state : RLState = new RLState()
 
-    constructor() {
+    constructor(private i : number) {
         this.addNeighbor()
     }
 
     update(cb : Function) {
-        this.state.update(stopcb)
+        this.state.update(cb)
     }
 
     startUpdating(cb : Function) {
-        this.state.startUpdating(startcb)
+        this.state.startUpdating(cb)
     }
 
     addNeighbor() {
@@ -120,5 +120,17 @@ class RLNode {
         }
         safeExecute(cb)
         return this
+    }
+
+    draw(context) {
+        const gap : number = w / NODES
+        context.save()
+        context.translate(this.i * gap + gap / 2, h / 2)
+        context.rotate(180 * this.state.scale)
+        context.beginPath()
+        context.moveTo(0, 0)
+        context.lineTo(-gap/2, 0)
+        context.stroke()
+        context.restore()
     }
 }
