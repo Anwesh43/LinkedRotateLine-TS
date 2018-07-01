@@ -82,3 +82,43 @@ class RLAnimator {
         }
     }
 }
+
+class RLNode {
+
+    prev : RLNode
+
+    next : RLNode
+
+    state : RLState = new RLState()
+
+    constructor() {
+        this.addNeighbor()
+    }
+
+    update(cb : Function) {
+        this.state.update(stopcb)
+    }
+
+    startUpdating(cb : Function) {
+        this.state.startUpdating(startcb)
+    }
+
+    addNeighbor() {
+        if (this.i < NODES - 1) {
+            this.next = new RLNode(this.i + 1)
+            this.next.prev = this
+        }
+    }
+
+    getNext(dir : number, cb : Function) : RLNode {
+        var curr : RLNode = this.prev
+        if (dir == 1) {
+            curr = this.next
+        }
+        if (curr) {
+            return curr
+        }
+        safeExecute(cb)
+        return this
+    }
+}
