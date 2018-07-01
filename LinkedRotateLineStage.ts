@@ -45,6 +45,12 @@ class LinkedRotateLineStage {
             })
         }
     }
+
+    static init() {
+        const stage : LinkedRotateLineStage = new LinkedRotateLineStage()
+        stage.render()
+        stage.handleTap()
+    }
 }
 
 class RLState {
